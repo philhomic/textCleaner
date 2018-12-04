@@ -41,13 +41,45 @@ table {
 	border-spacing: 0;
 }
 
+/* Reset `button` and button-style `input` default styles */
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+button {
+    background: none;
+    border: 0;
+    color: inherit;
+    /* cursor: default; */
+    font: inherit;
+    line-height: normal;
+    overflow: visible;
+    padding: 0;
+    -webkit-appearance: button; /* for input */
+    -webkit-user-select: none; /* for button */
+       -moz-user-select: none;
+        -ms-user-select: none;
+}
+input::-moz-focus-inner,
+button::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
 /* real style starts here */
 html {
 	height: 100%;
+	overflow: hidden;
 }
 body {
 	height: 100%;
-    background-image: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12);
+    /*background-image: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12);*/
+    background: #2c3e50;
+	display: flex;
+	flex-direction: column;
+}
+
+header {
+	flex: 0;
 }
 
 h1 {
@@ -60,37 +92,65 @@ h1 {
 }
 
 .main {
-	max-width: 1200px;
-	margin: 0 auto;
-	height: 100%;
+	display: flex;
+	flex: 1;
+	flex-direction: row;
 }
 
 .textarea {
-	margin-left: 320px;
-	height: 600px;
+	flex: 1;
+	/*background: green;*/
 }
 
 .toolbararea {
-	width: 300px;
-	height: 300px;
-	background: red;
-	float: left;
-	margin: 40px 0 40px 20px;
+	flex: 1;
+	max-width: 250px;
+	min-width: 250px;
+	/*background: red;*/
+	order: -1;
 	box-sizing: border-box;
 }
 
 #editor {
-	font-size: 26px;
+	flex: 1;
+	font-size: 22px;
+	font-weight: 700;
 	background-color: #FFF;
 	padding: 30px;
-	margin: 40px 40px 40px 20px;
-	border-radius: 20px;
+	margin: 40px 20px 40px 20px;
+	border-radius: 10px;
 	box-shadow: 0 3px 26px 0 rgba(0,0,0,0.20);
 	border: none;
 	outline: none;
-	height: 100%;
 }
 
+#toolbars {
+	display: flex;
+	flex-direction: column;
+	/*background: red;*/
+	margin: 40px 0 40px 20px;
+	align-items: flex-end;
+}
 
+#toolbars button {
+	font-size: 14px;
+	font-weight: 600;
+	font-family: 'Microsoft Yahei';
+	color: #fff;
+	padding: 5px 10px;
+	outline: none;
+	background-color: #27ae60;
+	border: none;
+	border-radius:5px;
+	box-shadow: 0 3px #95a5a6;
+	cursor: pointer;
+}
+
+#toolbars button:hover {
+	background-color: #2ecc71;
+}
+
+footer {
+}
 
 

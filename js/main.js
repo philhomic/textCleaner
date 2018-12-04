@@ -54,12 +54,26 @@ $(function() {
 		$('#editor').width($('.textarea').width() - 120 + 'px');
 	}
 
-	resetEditorWidth();
+	var resetEditorHeight = function(){
+		$('#editor').height($('.textarea').height() - 140 + 'px');
+	}
+
+	resetEditorHeight();
 	$(window).on('resize', function(){
-		resetEditorWidth();
+		resetEditorHeight();
 	})
 
-	$('#getSelection').on('click', function(){
-		replaceSelectedText($('#editor').get(0), {'re': '\\d', 'flag': 'g', 'f': addOne});
-	});
+	var reBrokenLine = '(.+[^\\.?\\.”"!！。’\'])\\s+\\n'; //不是以这些符号为结尾的行
+
+	var combineLines = function(str, brokenLine){
+		return brokenLine + ' ';
+	}
+
+	$('#combineLines').on('click', function(){
+		replaceSelectedText($('#editor').get(0), {
+			're': reBrokenLine,
+			'flag': 'g',
+			'f': combineLines
+		})
+	})
 })

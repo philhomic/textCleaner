@@ -1,0 +1,20 @@
+{
+  "name": "textcleaner",
+  "version": "1.0.0",
+  "description": "text cleaner",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "live-server ./ --port=9090"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/philhomic/textCleaner.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/philhomic/textCleaner/issues"
+  },
+  "homepage": "https://github.com/philhomic/textCleaner#readme"
+}
