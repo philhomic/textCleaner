@@ -119,4 +119,8 @@ $(function() {
 			replaceSelectedText(editor, rules[ruleName]);
 		})
 	})
+
+	$('#executeReplace').on('click', function(){
+		
+	})
 })
