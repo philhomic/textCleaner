@@ -1,4 +1,9 @@
+//注意页面中button的id命名规则，要与rule的规则对应
+//例如针对ruCombineBrokenLines这样一个rule，button的id要设置为combineBrokenLines
+
 $(function() {
+	var rules = {}; //用来盛放所有的替换规则
+
 	//utils
 	//设置文本选中高亮
 	var setTextSelected = function(inputDom, startIndex, endIndex) {
@@ -30,8 +35,9 @@ $(function() {
 	var replaceSelectedText = function(elem, rules) {
 		var selectedText = getSelectedText(elem);
 		if(selectedText == ''){
-			alert('请先选中要整理的文字。');
-			return;
+			//如果什么文字都没有选，就选中整段文本
+			setTextSelected(elem, 0, elem.value.length);
+			return replaceSelectedText(elem, rules);
 		}
 		if (!Array.isArray(rules) && typeof rules == 'object') {
 			var newText = selectedText.replace(new RegExp(rules['re'], rules['flag']), rules['f']);
@@ -59,21 +65,53 @@ $(function() {
 	}
 
 	resetEditorHeight();
+	resetEditorWidth();
 	$(window).on('resize', function(){
 		resetEditorHeight();
+		resetEditorWidth();
 	})
 
-	var reBrokenLine = '(.+[^\\.?\\.”"!！。’\'])\\s+\\n'; //不是以这些符号为结尾的行
+	//匹配规则汇总
 
-	var combineLines = function(str, brokenLine){
-		return brokenLine + ' ';
+	var ruCombineBrokenLines = {
+		'name': '断句行合并',
+		're':  '(.+[^\\.?\\.”"!！。’\'])\\s*\\n', //匹配不是以这些符号结尾的断行
+		'flag': 'g',
+		'f': function(str, brokenLine){
+			return brokenLine + ' ';
+		}
 	}
 
-	$('#combineLines').on('click', function(){
-		replaceSelectedText($('#editor').get(0), {
-			're': reBrokenLine,
-			'flag': 'g',
-			'f': combineLines
+	var ruParagraphIndent = {
+		'name': '段首缩进四格',
+		're': '^\\s*(.+)\\s*$', //匹配行内容
+		'flag': 'mg', //启用多行模式
+		'f': function(line, realContent){
+			return '    ' + realContent.trim();
+		}
+	}
+
+	var ruDeleteNumAfterLetters = {
+		'name': '删除字母结尾后的数字',
+		're': '([a-z]+)\\d+',
+		'flag': 'g',
+		'f': function(wordEndingWithNumber, word){
+			return word;
+		}
+	}
+
+	rules['ruCombineBrokenLines'] = ruCombineBrokenLines;
+	rules['ruParagraphIndent'] = ruParagraphIndent;
+	rules['ruDeleteNumAfterLetters'] = ruDeleteNumAfterLetters;
+
+
+	//统一为按钮添加事件
+	$.each($('#toolbars button'), function(idx, btn){
+		var id = btn.id;
+		var ruleName = 'ru' + id[0].toUpperCase() + id.substring(1);
+		var editor = $('#editor').get(0);
+		$('#' + id).on('click', function(){
+			replaceSelectedText(editor, rules[ruleName]);
 		})
 	})
 })
