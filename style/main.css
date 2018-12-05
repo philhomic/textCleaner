@@ -64,6 +64,31 @@ button::-moz-focus-inner {
     border: 0;
     padding: 0;
 }
+input,
+label,
+select,
+button,
+textarea
+{
+	margin:0;
+	border:0;
+	padding:0;
+	display:inline-block;
+	vertical-align:middle;
+	white-space:normal;
+	background:none;
+	line-height:1;
+	
+	/* Browsers have different default form fonts */
+	font-size:13px;
+	font-family:Arial;
+}
+
+/* Remove the stupid outer glow in Webkit */
+input:focus
+{
+	outline:0;
+}
 
 /* real style starts here */
 html {
@@ -109,6 +134,7 @@ h1 {
 	/*background: red;*/
 	order: -1;
 	box-sizing: border-box;
+	overflow: scroll;
 }
 
 #editor {
@@ -116,7 +142,7 @@ h1 {
 	font-size: 22px;
 	font-weight: 500;
 	font-family: "Trebuchet MS", Helvetica, sans-serif;
-	text-align: justify;
+	text-align: left;
 	background-color: #FFF;
 	padding: 30px;
 	margin: 40px 20px 40px 20px;
@@ -131,22 +157,74 @@ h1 {
 	flex-direction: column;
 	/*background: red;*/
 	margin: 40px 0 40px 20px;
-	align-items: flex-end;
 }
 
-#toolbars button {
+#toolbars div {
+	display: flex;
+	flex-flow: row wrap;
+}
+
+#toolbars div h3 {
+	display: block;
+	width: 100%;
+	text-align: center;
+	padding: 6px 0;
+	border-top: 1px dashed #fff;
+	border-bottom: 1px dashed #fff;
+	color: #fff;
+	margin: 4px;
+	font-family: 'Microsoft Yahei';
+	font-weight: 700;
+	background: rgba(255, 255, 255, 0.2);
+	letter-spacing: 2px;
+}
+
+#toolbars div div {
+	font-size: 16px;
+	margin: 4px;
+	line-height: 28px;
+	color: #fff;
+}
+
+#toolbars div div select {
+	font-size: 14px;
+	margin: 4px;
+	background: #fff;
+}
+
+#toolbars div div input {
+	font-size: 14px;
+	margin: 4px;
+	border-radius: 2px;
+	border: none;
+	background-image: none;
+	box-shadow: none;
+	-webkit-appearance: none;
+	padding: 2px 4px;
+	background: #fff;
+}
+
+
+#toolbars div button {
 	font-size: 14px;
 	font-weight: 600;
 	font-family: 'Microsoft Yahei';
 	color: #fff;
 	padding: 5px 10px;
 	outline: none;
-	background-color: #27ae60;
 	border: none;
 	border-radius:5px;
-	box-shadow: 0 3px #95a5a6;
+	box-shadow: 0 1px #95a5a6;
 	cursor: pointer;
-	margin-bottom: 10px;
+	margin: 4px;
+}
+
+#toolbars div.lines button {
+	background-color: #27ae60;
+}
+
+#toolbars div.replace button {
+	background-color: #fc2c3f;
 }
 
 #toolbars button:hover {

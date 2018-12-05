@@ -83,7 +83,7 @@ $(function() {
 		're':  '(.+[^\\.?\\.”"!！。’\'])\\s*\\n', //匹配不是以这些符号结尾的断行
 		'flag': 'g',
 		'f': function(str, brokenLine){
-			return brokenLine + ' ';
+			return brokenLine.trim() + ' ';
 		}
 	}
 

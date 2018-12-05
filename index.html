@@ -7,6 +7,7 @@
 		</style>
 		<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 		<script src="./js/main.js"></script>
+		<link rel="stylesheet" type="text/css" href="style/normalize.css">
 		<link rel="stylesheet" href="./style/main.css">
 	</head>
 	<body>
@@ -16,9 +17,25 @@
 		<section class="main">
 			<section class="toolbararea">
 				<div id="toolbars">
-					<button id="combineBrokenLines">断句行合并</button>
-					<button id="paragraphIndent">段首缩进四格</button>
-					<button id="deleteNumAfterLetters">删除字母结尾后的数字</button>
+					<div class="lines">
+						<h3>段落处理</h3>
+						<button id="combineBrokenLines">断句行合并</button>
+						<button id="paragraphIndent">段首缩进四格</button>
+						<button id="deleteNumAfterLetters">删除字母结尾后的数字</button>	
+					</div>
+					<div class="replace">
+						<h3>替换操作</h3>
+						<div id="replacer">
+							将
+							<select id='paraPosition'>
+								<option id='inPara' value='inPara'>段中</option>
+								<option id='beforePara' value='beforePara'>段首</option>
+								<option id='afterPara' value='afterPara'>段尾</option>
+							</select>
+							的<input id='originalText' type="text">替换为<input type="text" id='intendedText'>
+							<button id="executeReplace">开始替换</button>
+						</div>
+					</div>
 				</div>
 			</section>
 			<section class="textarea">
