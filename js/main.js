@@ -56,6 +56,12 @@ $(function() {
 		}
 	}
 
+	//escapeRegExp
+	function escapeRegExp(string){
+	  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+	}
+
+    //设置样式
 	var resetEditorWidth = function(){
 		$('#editor').width($('.textarea').width() - 120 + 'px');
 	}
@@ -72,7 +78,6 @@ $(function() {
 	})
 
 	//匹配规则汇总
-
 	var ruCombineBrokenLines = {
 		'name': '断句行合并',
 		're':  '(.+[^\\.?\\.”"!！。’\'])\\s*\\n', //匹配不是以这些符号结尾的断行
