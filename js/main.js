@@ -44,7 +44,7 @@ $(function() {
 			var start = elem.selectionStart;
 			var end = elem.selectionEnd;
 			var oldText = elem.value;
-			elem.value = oldText.substr(0, start) + newText + oldText.substr(end, oldText.length);
+			elem.value = oldText.substring(0, start) + newText + oldText.substring(end, oldText.length);
 			setTextSelected(elem, start, start + newTextLength);
 			return elem.value;
 		}
@@ -120,9 +120,10 @@ $(function() {
       })
 		}
 	})
+
 	//开始替换按钮的动作
 	$('#executeReplace').on('click', function(){
-    var editor = $('#editor').get(0);
+    	var editor = $('#editor').get(0);
 		var pos = $('#paraPosition').val();
 		var originalText = $('#originalText').val();
 		var intendedText = $('#intendedText').val() || '';
@@ -138,7 +139,7 @@ $(function() {
 				flag = 'mg';
 				break;
 			case 'afterPara':
-				reStr = intendedText + '(?=$)';
+				reStr = originalText + '(?=$)';
 				flag = 'mg';
 				break;
 		}
@@ -147,8 +148,23 @@ $(function() {
 			're': reStr,
 			'flag': flag,
 			'f': function(){
-				return intendedText;
+				return ''.split.call(intendedText, '\\n').join('\n');
 			}
+		}
+		replaceSelectedText(editor, ruTemp);
+	})
+
+	//开始 Hack 按钮的动作
+	$('#executeHack').on('click', function(){
+		var editor = $('#editor').get(0);
+		var $regex = $('#regex');
+		var $flag = $('#flag');
+		var $function = $('#function');
+		var ruTemp = {
+			'name': '自定义骇客',
+			're': $regex.val(),
+			'flag': $flag.val(),
+			'f': new Function('a', 'b', 'c', 'd', 'e', 'f', 'g', $function.val())
 		}
 		replaceSelectedText(editor, ruTemp);
 	})

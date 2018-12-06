@@ -228,10 +228,39 @@ h1 {
 	background-color: #fc2c3f;
 }
 
+#toolbars .hack button {
+	background-color: #8d09ff;
+}
+
 #originalText {
 	width: 100px;
 }
 
+#toolbars .specialCharacters {
+	display: flex;
+	width: 100%;
+	flex-flow: row wrap;
+}
+
+#toolbars .specialCharacters span {
+	flex: 1;
+	background: rgba(255, 255, 255, 0.3);
+	border: 1px solid #fff;
+	text-align: center;
+	vertical-align: middle;
+}
+
+#toolbars .hack textarea#function {
+	width: 100%;
+	height: 150px;
+	background: #fff;
+	scroll: auto;
+	font-size: 16px;
+	box-sizing: border-box;
+	padding: 10px;
+	outline: none;
+	border: none;
+}
 
 
 footer {

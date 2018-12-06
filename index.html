@@ -34,6 +34,17 @@
 							</select>
 							的<input id='originalText' type="text">替换为<input type="text" id='intendedText'>
 							<button id="executeReplace">开始替换</button>
+							<div class="specialCharacters">
+								<span class="fullstop">.</span><span class="dollar">$</span><span class="cap">^</span><span class="leftBigBracket">{</span><span class="rightBigBracket">}</span><span class="leftSquareBracket">[</span><span class="rightSquareBracket">]</span><span class="leftBracket">(</span><span class="rightBracket">)</span><span class="backSlash">\</span><span class="verticalLine">|</span><span class="questionMark">?</span><span class="addMark">+</span><span class="asterisk">*</span>
+							</div>
+						</div>
+					</div>
+					<div class="hack">
+						<h3>危险！暗黑用法</h3>
+						<div id="replacer">
+							正则式：<input id='regex' type="text" placeholder='\d+(?=$)'>标志位：<input type="text" id='flag' placeholder='i, m, g'>函数式 (参数依序为 a,b,c,d,e,f,g）
+							<br/>请将函数体写入下方文本框：<textarea name="function" id="function"></textarea>
+							<button id="executeHack">开始 Hack</button>
 						</div>
 					</div>
 				</div>
