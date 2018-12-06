@@ -134,7 +134,7 @@ h1 {
 	/*background: red;*/
 	order: -1;
 	box-sizing: border-box;
-	overflow: scroll;
+	overflow: auto;
 }
 
 #editor {
@@ -150,6 +150,7 @@ h1 {
 	box-shadow: 0 3px 26px 0 rgba(0,0,0,0.20);
 	border: none;
 	outline: none;
+	line-height: 1.5;
 }
 
 #toolbars {
@@ -227,9 +228,11 @@ h1 {
 	background-color: #fc2c3f;
 }
 
-#toolbars button:hover {
-	background-color: #2ecc71;
+#originalText {
+	width: 100px;
 }
+
+
 
 footer {
 }

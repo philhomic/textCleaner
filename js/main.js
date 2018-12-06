@@ -26,8 +26,7 @@ $(function() {
 		{
 			return document.selection.createRange().text;
 		} else {
-			return inputDom.value.substring(inputDom.selectionStart,
-				inputDom.selectionEnd);
+			return inputDom.value.substring(inputDom.selectionStart,inputDom.selectionEnd);
 		}
 	}
 
@@ -56,8 +55,8 @@ $(function() {
 		}
 	}
 
-	//escapeRegExp
-	function escapeRegExp(string){
+	//Escape all RegExp special characters
+	var escapeRegExp = function (string){
 	  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 	}
 
@@ -114,13 +113,43 @@ $(function() {
 	$.each($('#toolbars button'), function(idx, btn){
 		var id = btn.id;
 		var ruleName = 'ru' + id[0].toUpperCase() + id.substring(1);
-		var editor = $('#editor').get(0);
-		$('#' + id).on('click', function(){
-			replaceSelectedText(editor, rules[ruleName]);
-		})
+    var editor = $('#editor').get(0);
+		if (rules[ruleName]){
+      $('#' + id).on('click', function(){
+        replaceSelectedText(editor, rules[ruleName]);
+      })
+		}
 	})
-
+	//开始替换按钮的动作
 	$('#executeReplace').on('click', function(){
-		
+    var editor = $('#editor').get(0);
+		var pos = $('#paraPosition').val();
+		var originalText = $('#originalText').val();
+		var intendedText = $('#intendedText').val() || '';
+		var flag;
+		var reStr = '';
+		switch (pos) {
+			case 'inPara':
+				reStr = originalText;
+				flag = 'g';
+				break;
+			case 'beforePara':
+				reStr = '(?=^)' + originalText;
+				flag = 'mg';
+				break;
+			case 'afterPara':
+				reStr = intendedText + '(?=$)';
+				flag = 'mg';
+				break;
+		}
+		var ruTemp = {
+			'name': '自定义替换',
+			're': reStr,
+			'flag': flag,
+			'f': function(){
+				return intendedText;
+			}
+		}
+		replaceSelectedText(editor, ruTemp);
 	})
 })
