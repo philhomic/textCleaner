@@ -130,16 +130,20 @@ $(function() {
 		var flag;
 		var reStr = '';
 		switch (pos) {
-			case 'inPara':
+			case 'inPara': //对应全文，单行模式
 				reStr = originalText;
 				flag = 'g';
 				break;
-			case 'beforePara':
+			case 'beforePara': //匹配行首，多行模式
 				reStr = '(?=^)' + originalText;
 				flag = 'mg';
 				break;
-			case 'afterPara':
+			case 'afterPara': //匹配行尾，多行模式
 				reStr = originalText + '(?=$)';
+				flag = 'mg';
+				break;
+			case 'inLine': //匹配行，多行模式
+				reStr = originalText;
 				flag = 'mg';
 				break;
 		}
@@ -147,11 +151,34 @@ $(function() {
 			'name': '自定义替换',
 			're': reStr,
 			'flag': flag,
-			'f': function(){
-				return ''.split.call(intendedText, '\\n').join('\n');
-			}
+			'f': ''.split.call(intendedText, '\\n').join('\n').split('\$\&').join('$&').split('\$\`').join('$`').split('\$\'').join('$\'')
 		}
 		replaceSelectedText(editor, ruTemp);
+	})
+
+	//为替换操作中上面一栏特殊字符按钮添加事件
+	$('#regexCharacters').on('click', function(ev){
+		var prevStr = $('#originalText').val();
+		$('#originalText').val(prevStr + ev.target.dataset.chr).focus().trigger('input');
+	})
+
+	//为替换操作中下面一栏的特殊字符按钮添加事件
+	$('#replacerCharacters').on('click', function(ev){
+		var prevStr = $('#intendedText').val();
+		$('#intendedText').val(prevStr + ev.target.dataset.chr).focus().trigger('input');
+	})
+
+	//为toolbar中的input添加onchange事件，如果不为空，则背景颜色变色以提示用户
+	$('#toolbars').on('input', function(ev){
+		var elem = ev.target;
+		if (elem.tagName.toUpperCase() == 'INPUT' || elem.tagName.toUpperCase() == 'TEXTAREA') {
+			if(elem.value != '') {
+        elem.style.backgroundColor = 'rgb(254,244,197)';
+			}else {
+				elem.style.backgroundColor = '#fff';
+			}
+
+		}
 	})
 
 	//开始 Hack 按钮的动作

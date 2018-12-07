@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
-		<title>文本清洗器</title>
+		<title>正则文本整理器</title>
 		<style>
 		</style>
 		<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
@@ -12,7 +12,7 @@
 	</head>
 	<body>
 		<header>
-			<h1>TEXT CLEANER</h1>
+			<h1>Regex Text Cleaner</h1>
 		</header>
 		<section class="main">
 			<section class="toolbararea">
@@ -26,21 +26,26 @@
 					<div class="replace">
 						<h3>替换操作</h3>
 						<div id="replacer">
+							<div class="specialCharacters" id="regexCharacters">
+								<span class="fullstop" data-chr="\.">.</span><span class="dollar" data-chr="\$">$</span><span class="caret" data-chr="\^">^</span><span class="leftBigBracket" data-chr="\{">{</span><span class="rightBigBracket" data-chr="\}">}</span><span class="leftSquareBracket" data-chr="\[">[</span><span class="rightSquareBracket" data-chr="\]">]</span><span class="leftBracket" data-chr="\(">(</span><span class="rightBracket" data-chr="\)">)</span><span class="backSlash" data-chr="\\">\</span><span class="verticalLine" data-chr="\|">|</span><span class="questionMark" data-chr="\?">?</span><span class="addMark" data-chr="\+">+</span><span class="asterisk" data-chr="\*">*</span><span class="anyCharacters" data-chr=".+">任意字符</span><span class="anyLetters" data-chr="[a-zA-Z]+">任意字母</span><span class="anyNumbers" data-chr="\d+">任意数字</span><span class="anyWhiteSpaces" data-chr="\s+">任意空白</span><span class="newLine" data-chr="\n">换行符</span>
+							</div>
 							将
 							<select id='paraPosition'>
 								<option id='inPara' value='inPara'>文中</option>
 								<option id='beforePara' value='beforePara'>段首</option>
 								<option id='afterPara' value='afterPara'>段尾</option>
+								<option value="inLine" class="inLine">段中</option>
 							</select>
 							的<input id='originalText' type="text">替换为<input type="text" id='intendedText'>
-							<button id="executeReplace">开始替换</button>
-							<div class="specialCharacters">
-								<span class="fullstop">.</span><span class="dollar">$</span><span class="cap">^</span><span class="leftBigBracket">{</span><span class="rightBigBracket">}</span><span class="leftSquareBracket">[</span><span class="rightSquareBracket">]</span><span class="leftBracket">(</span><span class="rightBracket">)</span><span class="backSlash">\</span><span class="verticalLine">|</span><span class="questionMark">?</span><span class="addMark">+</span><span class="asterisk">*</span>
+							<div class="specialCharacters" id="replacerCharacters">
+								<span class="newLine" data-chr="\n">换行符</span><span class="matched" data-chr="$&">匹配到的内容</span><span class="stringBeforeMatched" data-chr="$`">匹配项前内容</span><span class="stringAfterMatched" data-chr="$'">匹配项后内容</span>
 							</div>
+							<button id="executeReplace">开始替换</button>
+
 						</div>
 					</div>
 					<div class="hack">
-						<h3>危险！暗黑用法</h3>
+						<h3>Hack 用法</h3>
 						<div id="replacer">
 							正则式：<input id='regex' type="text" placeholder='\d+(?=$)'>标志位：<input type="text" id='flag' placeholder='i, m, g'>函数式 (参数依序为 a,b,c,d,e,f,g）
 							<br/>请将函数体写入下方文本框：<textarea name="function" id="function"></textarea>
