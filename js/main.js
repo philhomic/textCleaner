@@ -181,6 +181,23 @@ $(function() {
 		}
 	})
 
+	//设置editor的paste事件
+	$('#editor').on('paste', function(ev){
+		var start = $('#editor').prop('selectionStart');
+		var end;
+		//var length = ev.originalEvent.clipboardData.getData('Text').length;
+		setTimeout(function(){
+			end = $('#editor').prop('selectionEnd');
+			setTextSelected(ev.target, start, end);
+			var rules = [ruCombineBrokenLines, ruParagraphIndent, ruDeleteNumAfterLetters];
+			replaceSelectedText(ev.target, rules);
+			start = ev.target.selectionStart;
+			end = ev.target.selectionEnd;
+			ev.target.value = ev.target.value.replace(/.{1}$/g,  "$&\n");
+			setTextSelected(ev.target, start, end);
+		}, 200)
+	})
+
 	//开始 Hack 按钮的动作
 	$('#executeHack').on('click', function(){
 		var editor = $('#editor').get(0);
