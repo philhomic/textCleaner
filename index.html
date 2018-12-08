@@ -5,8 +5,9 @@
 		<title>正则文本整理器</title>
 		<style>
 		</style>
-		<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+		<script src="./js/jquery-3.3.1.min.js"></script>
 		<script src="./js/main.js"></script>
+		<script src="./js/config.js"></script>
 		<link rel="stylesheet" type="text/css" href="style/normalize.css">
 		<link rel="stylesheet" href="./style/main.css">
 	</head>
@@ -17,17 +18,31 @@
 		<section class="main">
 			<section class="toolbararea">
 				<div id="toolbars">
-					<div class="lines">
+					<!-- <div class="lines">
 						<h3>段落处理</h3>
 						<button id="combineBrokenLines">断句行合并</button>
 						<button id="paragraphIndent">段首缩进四格</button>
-						<button id="deleteNumAfterLetters">删除字母结尾后的数字</button>	
+						<button id="deleteNumAfterLetters">删除字母结尾后的数字</button>
+					</div> -->
+					<div class="userPlan">
+						<h3>用户策略</h3>
+						<div class="explain">右键单击上述按钮，可将其加入用户策略</div>
+						<div id="userPlan">
+							<ol>
+							</ol>
+						</div>
+						<div id="checkbox">
+							<input type="checkbox" id='useUserPlanOnPaste'>
+							<label for="useUserPlanOnPaste">粘贴时自动执行用户策略</label>
+						</div>
+						<button id="executeUserPlan">执行用户策略</button>
+						<button id="clearUserPlan">清空用户策略</button>
 					</div>
 					<div class="replace">
 						<h3>替换操作</h3>
 						<div id="replacer">
 							<div class="specialCharacters" id="regexCharacters">
-								<span class="fullstop" data-chr="\.">.</span><span class="dollar" data-chr="\$">$</span><span class="caret" data-chr="\^">^</span><span class="leftBigBracket" data-chr="\{">{</span><span class="rightBigBracket" data-chr="\}">}</span><span class="leftSquareBracket" data-chr="\[">[</span><span class="rightSquareBracket" data-chr="\]">]</span><span class="leftBracket" data-chr="\(">(</span><span class="rightBracket" data-chr="\)">)</span><span class="backSlash" data-chr="\\">\</span><span class="verticalLine" data-chr="\|">|</span><span class="questionMark" data-chr="\?">?</span><span class="addMark" data-chr="\+">+</span><span class="asterisk" data-chr="\*">*</span><span class="anyCharacters" data-chr=".+">任意字符</span><span class="anyLetters" data-chr="[a-zA-Z]+">任意字母</span><span class="anyNumbers" data-chr="\d+">任意数字</span><span class="anyWhiteSpaces" data-chr="\s+">任意空白</span><span class="newLine" data-chr="\n">换行符</span>
+								<span class="fullstop" data-chr="\." title="半角句点">.</span><span class="dollar" data-chr="\$" title="半角美元符号">$</span><span class="caret" data-chr="\^" title="半角插入号">^</span><span class="leftBigBracket" data-chr="\{" title="半角左大括号">{</span><span class="rightBigBracket" data-chr="\}" title="半角右大括号">}</span><span class="leftSquareBracket" data-chr="\[" title="半角左中括号">[</span><span class="rightSquareBracket" data-chr="\]" title="半角右中括号">]</span><span class="leftBracket" data-chr="\(" title="半角左圆括号">(</span><span class="rightBracket" data-chr="\)" title="半角右圆括号">)</span><span class="backSlash" data-chr="\\" title="半角反斜线">\</span><span class="verticalLine" data-chr="\|" title="半角竖线">|</span><span class="questionMark" data-chr="\?" title="半角问号">?</span><span class="addMark" data-chr="\+" title="半角加号">+</span><span class="asterisk" data-chr="\*" title="半角星号">*</span><span class="anyCharacters" data-chr=".+" title="一个或多个任意字符，包含空白符号、数字、字母以及各种标点符号">任意字符</span><span class="anyLetters" data-chr="[a-zA-Z]+" title="一个或多个英文字母">任意字母</span><span class="anyNumbers" data-chr="\d+" title="一个或多个数字">任意数字</span><span class="anyWhiteSpaces" data-chr="\s+" title="一个或多个空白符号，比如多个空格或Tab符号等">任意空白</span><span class="newLine" data-chr="\n" title="换行符，需要将位置选择为“文中”才会匹配到">换行符</span>
 							</div>
 							将
 							<select id='paraPosition'>
@@ -41,7 +56,8 @@
 								<span class="newLine" data-chr="\n">换行符</span><span class="matched" data-chr="$&">匹配到的内容</span><span class="stringBeforeMatched" data-chr="$`">匹配项前内容</span><span class="stringAfterMatched" data-chr="$'">匹配项后内容</span>
 							</div>
 							<button id="executeReplace">开始替换</button>
-
+							<button id="addToUserButtonFromReplace">+自定义按钮</button>
+							<button id="addToUserPlanFromReplace">+用户策略</button>
 						</div>
 					</div>
 					<div class="hack">
@@ -50,6 +66,8 @@
 							正则式：<input id='regex' type="text" placeholder='\d+(?=$)'>标志位：<input type="text" id='flag' placeholder='i, m, g'>函数式 (参数依序为 a,b,c,d,e,f,g）
 							<br/>请将函数体写入下方文本框：<textarea name="function" id="function"></textarea>
 							<button id="executeHack">开始 Hack</button>
+							<button id="addToUserButtonFromHack">+自定义按钮</button>
+							<button id="addToUserPlanFromHack">+用户策略</button>
 						</div>
 					</div>
 				</div>
@@ -59,5 +77,9 @@
 			</section>
 		</section>
 	<footer></footer>
+	<div id="toolbtn">
+		<button>加入用户策略</button>
+		<button>删除该按钮</button>
+	</div>
 </body>
 </html>
