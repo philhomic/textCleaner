@@ -38,6 +38,8 @@ $(function() {
 
 	//替换选中文本并再次选中文本
 	var replaceSelectedText = function(elem, rules) {
+		//传入的rules有三种情况，一种是普通的正则规则，一种是userPlan的数组；还有一种是由【用户策略】生成的打包规则
+		if (elem.value == '') return;
 		var selectedText = getSelectedText(elem);
 		if(selectedText == ''){
 			//如果什么文字都没有选，就选中整段文本
@@ -45,16 +47,30 @@ $(function() {
 			return replaceSelectedText(elem, rules);
 		}
 		if (!Array.isArray(rules) && typeof rules == 'object') {
-			var newText = selectedText.replace(new RegExp(rules['re'], rules['flag']), rules['f']);
-			var newTextLength = newText.length;
-			var start = elem.selectionStart;
-			var end = elem.selectionEnd;
-			var oldText = elem.value;
-			elem.value = oldText.substring(0, start) + newText + oldText.substring(end, oldText.length);
-			setTextSelected(elem, start, start + newTextLength);
-			return elem.value;
+			if (!Array.isArray(rules['f'])){ //针对普通规则的时候
+				var newText = selectedText.replace(new RegExp(rules['re'], rules['flag']), rules['f']);
+				var newTextLength = newText.length;
+				var start = elem.selectionStart;
+				var end = elem.selectionEnd;
+				var oldText = elem.value;
+				elem.value = oldText.substring(0, start) + newText + oldText.substring(end, oldText.length);
+				setTextSelected(elem, start, start + newTextLength);
+				return elem.value;
+			} else { //针对传入的是【用户策略】生成的打包规则的时候
+				// 打包规则类似于：
+				// {
+				//   'name': '',
+				//   're': '',
+				//   'flag': '',
+				//   'f': [rule1, rule2],
+				//   'group': 'userDefined',
+				//   'title': ''
+				// }
+				replaceSelectedText(elem, rules['f']);
+			}
+
 		}
-		if (Array.isArray(rules)){
+		if (Array.isArray(rules)){ // 针对rules是userPlan的数组的情况
 			rules.forEach(function(rule){
 				replaceSelectedText(elem, rule);
 			})
@@ -100,11 +116,11 @@ $(function() {
 			var reAllNums = /^[0-9]+$/;
 			var id = '';
 			if (reAllNums.test(ru)){ //说明这个rule是用户自定义的
-				id = ru;
+				id = '' + ru;
 			} else {
 				id = ru[2].toLowerCase() + ru.substring(3);
 			}
-			var button = $('<button class="btn" title=' + rule['title'] + ' id=\"' + id + '\">' + rule['name'] + '</button>');
+			var button = $('<button class=\"btn\" title=\"' + rule['title'] + '\" id=' + id + '>' + rule['name'] + '</button>');
 			group.append(button);
 			return button;
 		}
@@ -130,7 +146,7 @@ $(function() {
 			var ruleName = '';
 			var reAllNums = /^\d+$/;
 			if (reAllNums.test(id)){
-				ruleName = id;
+				ruleName = '' + id;
 			} else {
 				ruleName = 'ru' + id[0].toUpperCase() + id.substring(1);
 			}
@@ -209,7 +225,7 @@ $(function() {
 				var ruleName = '';
 				var reAllNums = /^\d+$/;
 				if (reAllNums.test(btnId)){
-					ruleName = btnId;
+					ruleName = '' + btnId;
 				} else {
 					ruleName = 'ru' + btnId[0].toUpperCase() + btnId.substring(1);
 				}
@@ -218,11 +234,11 @@ $(function() {
 				renderGroupButtons(rules);
 			})
 
-			$('#toolbtn button').eq(0).on('click', function(e){
+			$('#toolbtn button').eq(0).off('click').on('click', function(e){
 				var ruleName = '';
 				var reAllNums = /^\d+$/;
 				if (reAllNums.test(btnId)){
-					ruleName = btnId;
+					ruleName = '' + btnId;
 				} else {
 					ruleName = 'ru' + btnId[0].toUpperCase() + btnId.substring(1);
 				}
@@ -250,7 +266,7 @@ $(function() {
 				$userPlanList.append($li);
 			})
 		}
-		checkbox.checked = useUserPlanOnPaste
+		checkbox.checked = useUserPlanOnPaste;
 	}
 	renderUserPlan();
 
@@ -271,6 +287,22 @@ $(function() {
 	$('#clearUserPlan').on('click', function(){
 		$('#userPlan').find('ol').empty();
 		userPlan = [];
+	})
+
+	//点击【打包为自定义按钮】时的操作
+	$('#addToUserButtonFromUserPlan').on('click', function(){
+		var ruTemp = {
+			'name': '',
+			're': '',
+			'flag': '',
+			'f': $.extend(true, [], userPlan),
+			'group': 'userDefined',
+			'title': ''
+		}
+		ruTemp['name'] = window.prompt('请给这个功能起个名字。') || '自定义打包策略';
+		var randomId = ('' + Math.random()).replace('.', '');
+		rules[randomId] = ruTemp;
+		renderGroupButtons(rules);
 	})
 
 	//替换操作区域的规则生成

@@ -123,14 +123,12 @@ h1 {
 
 .textarea {
 	flex: 1;
-	/*background: green;*/
 }
 
 .toolbararea {
 	flex: 1;
-	max-width: 300px;
-	min-width: 300px;
-	/*background: red;*/
+	/* max-width: 400px;
+	min-width: 400px; */
 	order: -1;
 	box-sizing: border-box;
 	overflow: auto;
@@ -155,7 +153,6 @@ h1 {
 #toolbars {
 	display: flex;
 	flex-direction: column;
-	/*background: red;*/
 	margin: 40px 0 40px 20px;
 }
 
@@ -293,10 +290,6 @@ h1 {
 	margin-top: 5px
 }
 
-#originalText {
-	width: 100px;
-}
-
 #toolbars .specialCharacters {
 	display: flex;
 	width: 100%;
@@ -394,6 +387,32 @@ h1 {
 }
 #toolbtn button:last-child {
 	border-top: 1px dashed #bbb;
+}
+
+@media only screen and (max-width: 1280px) {
+	.toolbararea {
+		min-width: 300px;
+		max-width: 300px;
+	}
+	#originalText {
+		width: 163px;
+	}
+	#intendedText {
+		width: 205px;
+	}
+}
+
+@media only screen and (min-width: 1280px) {
+	.toolbararea {
+		min-width: 400px;
+		max-width: 400px;
+	}
+	#originalText {
+		width: 263px;
+	}
+	#intendedText {
+		width: 305px;
+	}
 }
 
 /* checkbox 的样式，从codepen上直接抄的 */
