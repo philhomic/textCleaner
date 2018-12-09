@@ -100,7 +100,44 @@ var groups = {
 }
 
 //用于保存用户策略
-var userPlan = [ruParagraphIndent, ruDeleteBrackets];
+var userPlan = [];
 
 //用于保存是否在粘贴时自动选中粘贴内容
 var useUserPlanOnPaste = false;
+
+//用于记录textarea文本修改的记录
+var textareaHistory = [''];
+
+//localStorage相关设置
+var rules_in_store = localStorage.getItem('rules') ;
+var groups_in_store = localStorage.getItem('groups');
+var userPlan_in_store = localStorage.getItem('userPlan');
+var useUserPlanOnPaste_in_store = localStorage.getItem('useUserPlanOnPaste');
+var textareaHistory_in_store = localStorage.getItem('textareaHistory');
+
+var strToBool = function(str){
+  if (str == 'True' || str == 'true') {
+    return true;
+  } else if (str == 'False' || str == 'false') {
+    return false;
+  }
+}
+
+console.log(JSON.parse(rules_in_store));
+console.log(JSON.parse(groups_in_store));
+console.log(JSON.parse(userPlan_in_store));
+console.log(JSON.parse(useUserPlanOnPaste_in_store));
+console.log(JSON.parse(textareaHistory_in_store));
+
+rules = rules_in_store ? JSON.parse(rules_in_store) : rules;
+groups = groups_in_store ? JSON.parse(groups_in_store) : groups;
+userPlan = userPlan_in_store ? JSON.parse(userPlan_in_store) : userPlan;
+useUserPlanOnPaste = useUserPlanOnPaste_in_store ? strToBool(useUserPlanOnPaste_in_store) : useUserPlanOnPaste;
+textareaHistory = textareaHistory_in_store ? JSON.parse(textareaHistory_in_store): textareaHistory;
+
+
+console.log(rules);
+console.log(groups);
+console.log(userPlan);
+console.log(useUserPlanOnPaste);
+console.log(textareaHistory);

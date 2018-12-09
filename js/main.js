@@ -53,7 +53,7 @@ $(function() {
 				var start = elem.selectionStart;
 				var end = elem.selectionEnd;
 				var oldText = elem.value;
-				elem.value = oldText.substring(0, start) + newText + oldText.substring(end, oldText.length);
+				$(elem).val(oldText.substring(0, start) + newText + oldText.substring(end, oldText.length)).change();
 				setTextSelected(elem, start, start + newTextLength);
 				return elem.value;
 			} else { //针对传入的是【用户策略】生成的打包规则的时候
@@ -407,9 +407,44 @@ $(function() {
 			}
 			start = ev.target.selectionStart;
 			end = ev.target.selectionEnd;
-			ev.target.value = ev.target.value.replace(/.{1}$/g,  "$&\n");
+			$(ev.target).val(ev.target.value.replace(/.{1}$/g,  "$&\n")).change();
 			setTextSelected(ev.target, start, end);
 		}, 200)
+	})
+
+	//用来记录$editor的历史记录
+	$('#editor').bind('paste change input', function(ev){
+		var len = textareaHistory.length;
+		var value = ev.target.value;
+		if (value != textareaHistory[len-1]){
+			if(len >= 30) {
+				textareaHistory.shift();
+			}
+			textareaHistory.push(value);
+		} else {
+			return;
+		}
+	})
+
+	var initEditor = function(){
+		var len = textareaHistory.length;
+		var initText = textareaHistory[len-1];
+		$('#editor').val(initText);
+	}
+	initEditor();
+
+	//用来定义CTRL+Z的撤销动作
+	$('body').on('keyup', function(ev){
+		var historyStr = '';
+		if(ev.which == 90 && ev.ctrlKey){
+			if (textareaHistory.length == 0){
+				textareaHistory.push('');
+			}
+			textareaHistory.pop(); //把最后一次的值挤出来
+			historyStr = textareaHistory.pop() || '';
+			$('#editor').val(historyStr).change();
+		}
+		ev.preventDefault();
 	})
 
 	// HACK操作区的规则生成
@@ -452,4 +487,13 @@ $(function() {
 		renderUserPlan();
 	})
 
+	//localStorage在unload的时候的存储数据
+	//window.onload的时候，在localStorage中保存相应的值
+	$(window).on('beforeunload', function(){
+	  localStorage.setItem('rules', JSON.stringify(rules));
+	  localStorage.setItem('groups', JSON.stringify(groups));
+	  localStorage.setItem('userPlan', JSON.stringify(userPlan));
+	  localStorage.setItem('useUserPlanOnPaste', String(useUserPlanOnPaste));
+	  localStorage.setItem('textareaHistory', JSON.stringify(textareaHistory));
+	})
 })
