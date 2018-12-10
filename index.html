@@ -6,7 +6,6 @@
 		<style>
 		</style>
 		<script src="./js/jquery-3.3.1.min.js"></script>
-		<script src="./js/localforage.min.js"></script>
 		<script src="./js/config.js"></script>
 		<script src="./js/main.js"></script>
 		<link rel="stylesheet" type="text/css" href="style/normalize.css">
@@ -48,10 +47,10 @@
 							</div>
 							将
 							<select id='paraPosition'>
+								<option value="inLine" class="inLine">段中</option>
 								<option id='inPara' value='inPara'>文中</option>
 								<option id='beforePara' value='beforePara'>段首</option>
 								<option id='afterPara' value='afterPara'>段尾</option>
-								<option value="inLine" class="inLine">段中</option>
 							</select>
 							的<input id='originalText' type="text">替换为<input type="text" id='intendedText'>
 							<div class="specialCharacters" id="replacerCharacters">

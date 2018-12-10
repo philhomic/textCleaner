@@ -247,11 +247,8 @@ $(function() {
 				$('#toolbtn').hide();
 				renderUserPlan();
 			})
-
 		}
-
-		useToolbtn();
-
+    useToolbtn();
 	}
 	renderGroupButtons(rules);
 
@@ -414,10 +411,11 @@ $(function() {
 
 	//用来记录$editor的历史记录
 	$('#editor').bind('paste change input', function(ev){
+		var trackNum = 50;
 		var len = textareaHistory.length;
 		var value = ev.target.value;
 		if (value != textareaHistory[len-1]){
-			if(len >= 30) {
+			if(len >= trackNum) {
 				textareaHistory.shift();
 			}
 			textareaHistory.push(value);
@@ -489,23 +487,4 @@ $(function() {
 		userPlan.push(ruTemp);
 		renderUserPlan();
 	})
-
-	// //处理stringify的时候不能序列化function的问题
-	// var stringifyCb = function(k, v){
-	// 	if (typeof v['f'] === 'function') {
-	// 		return v.toString();
-	// 	} else {
-	// 		return v;
-	// 	}
-	// }
-	//
-	// //localStorage在unload的时候的存储数据
-	// //window.onload的时候，在localStorage中保存相应的值
-	// $(window).on('beforeunload', function(){
-	//   localStorage.setItem('rules', JSON.stringify(rules, stringifyCb));
-	//   localStorage.setItem('groups', JSON.stringify(groups, stringifyCb));
-	//   localStorage.setItem('userPlan', JSON.stringify(userPlan, stringifyCb));
-	//   localStorage.setItem('useUserPlanOnPaste', String(useUserPlanOnPaste, stringifyCb));
-	//   localStorage.setItem('textareaHistory', JSON.stringify(textareaHistory, stringifyCb));
-	// })
 })

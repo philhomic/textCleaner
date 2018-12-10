@@ -51,7 +51,7 @@ var ruDeleteBrackets = {
 
 var ruParagraphIndent = {
   'name': '段首缩进四格',
-  're': '^\\s*(.+)\\s*$', //匹配行内容
+  're': '^[^\\S\\n]*(.+)$', //匹配行内容
   'flag': 'mg', //启用多行模式
   'f': function(line, realContent){
     return '    ' + realContent;
@@ -62,11 +62,9 @@ var ruParagraphIndent = {
 
 var ruDeleteEmptySpacesBetweenAndAfterParagraphs = {
   'name': '去除段首段尾空格',
-  're': '^\\s*(.+)\\s*$',
+  're': '(^[^\\S\\n]+)|([^\\S\\n]+$)',
   'flag': 'mg',
-  'f': function(line, realContent){
-    return realContent || '';
-  },
+  'f': '',
   'group': 'spaces',
   'title': '删除段首和段尾的空格'
 }
@@ -82,6 +80,15 @@ var ruDeleteNumAfterLetters = {
   'title': '删除一个或多个字母后面紧跟的数字，例如Hello4中的4就会被删去。'
 }
 
+var ruCombineSpacesWithinLinesToOneBlank = {
+  'name': '合并空格',
+  're': '(?<!^)[^\\S\\n]+',
+  'flag': 'mg',
+  'f': ' ',
+  'group': 'spaces',
+  'title': '将段内出现的连在一起的多个空白字符合并为一个空格；段首出现的缩进空格则会被忽略。'
+}
+
 rules['ruCombineBrokenLines'] = ruCombineBrokenLines;
 rules['ruParagraphIndent'] = ruParagraphIndent;
 rules['ruDeleteNumAfterLetters'] = ruDeleteNumAfterLetters;
@@ -90,6 +97,7 @@ rules['ruAddEmptyLineBetweenLines'] = ruAddEmptyLineBetweenLines;
 rules['ruDeleteEmptyLinesBetweenLines'] = ruDeleteEmptyLinesBetweenLines;
 rules['ruDeleteEmptySpacesBetweenAndAfterParagraphs'] = ruDeleteEmptySpacesBetweenAndAfterParagraphs;
 rules['ruDeleteBrackets'] = ruDeleteBrackets;
+rules['ruCombineSpacesWithinLinesToOneBlank'] = ruCombineSpacesWithinLinesToOneBlank;
 
 //groups的配置
 var groups = {
@@ -108,49 +116,3 @@ var useUserPlanOnPaste = false;
 //用于记录textarea文本修改的记录
 var textareaHistory = [''];
 
-// //localStorage相关设置
-// var rules_in_store = localStorage.getItem('rules') ;
-// var groups_in_store = localStorage.getItem('groups');
-// var userPlan_in_store = localStorage.getItem('userPlan');
-// var useUserPlanOnPaste_in_store = localStorage.getItem('useUserPlanOnPaste');
-// var textareaHistory_in_store = localStorage.getItem('textareaHistory');
-//
-// var strToBool = function(str){
-//   if (str == 'True' || str == 'true') {
-//     return true;
-//   } else if (str == 'False' || str == 'false') {
-//     return false;
-//   }
-// }
-//
-// //迂回解决JSON.parse不能解析键值为function的情况
-// function fixData(obj){
-//   for (let property in obj){
-//     if(property === 'f' && obj.hasOwnProperty(property)){
-//       if (typeof obj[property] == 'string') {
-//         obj[property] = eval("(" + obj[property] + ")");
-//       }
-//     }
-//   }
-// }
-//
-// console.log(rules_in_store);
-// console.log(JSON.parse(groups_in_store));
-// console.log(JSON.parse(userPlan_in_store));
-// console.log(JSON.parse(useUserPlanOnPaste_in_store));
-// console.log(JSON.parse(textareaHistory_in_store));
-//
-// rules = rules_in_store ? JSON.parse(rules_in_store) : rules;
-// fixData(rules);
-// groups = groups_in_store ? JSON.parse(groups_in_store) : groups;
-// userPlan = userPlan_in_store ? JSON.parse(userPlan_in_store) : userPlan;
-// fixData(userPlan);
-// useUserPlanOnPaste = useUserPlanOnPaste_in_store ? strToBool(useUserPlanOnPaste_in_store) : useUserPlanOnPaste;
-// textareaHistory = textareaHistory_in_store ? JSON.parse(textareaHistory_in_store): textareaHistory;
-//
-//
-// console.log(rules);
-// console.log(groups);
-// console.log(userPlan);
-// console.log(useUserPlanOnPaste);
-// console.log(textareaHistory);
