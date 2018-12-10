@@ -113,6 +113,9 @@ var userPlan = [];
 //用于保存是否在粘贴时自动选中粘贴内容
 var useUserPlanOnPaste = false;
 
+//用于记录是否在粘贴时自动选中粘贴内容
+var automaticSelectOnPaste = true;
+
 //用于记录textarea文本修改的记录
 var textareaHistory = [''];
 

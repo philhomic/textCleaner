@@ -254,7 +254,8 @@ $(function() {
 
 	var renderUserPlan = function(){
 		var $userPlanList = $('#userPlan').find('ol');
-		var checkbox = $('#useUserPlanOnPaste').get(0);
+		var checkboxA = $('#useUserPlanOnPaste').get(0);
+		var checkboxB = $('#automaticSelectOnPaste').get(0);
 		var $li;
 		$userPlanList.empty();
 		if (userPlan.length !== 0) {
@@ -263,7 +264,8 @@ $(function() {
 				$userPlanList.append($li);
 			})
 		}
-		checkbox.checked = useUserPlanOnPaste;
+		checkboxA.checked = useUserPlanOnPaste;
+		checkboxB.checked = automaticSelectOnPaste;
 	}
 	renderUserPlan();
 
@@ -271,6 +273,12 @@ $(function() {
 	$('#useUserPlanOnPaste').on('click', function(e){
 		var bool = e.target.checked;
 		useUserPlanOnPaste = bool;
+	})
+
+	//点选【粘贴时自动选中粘贴内容】复选框的动作
+	$('#automaticSelectOnPaste').on('click', function(e){
+		var bool = e.target.checked;
+		automaticSelectOnPaste = bool;
 	})
 
 	//点击【执行用户策略】按钮的操作
@@ -405,7 +413,14 @@ $(function() {
 			start = ev.target.selectionStart;
 			end = ev.target.selectionEnd;
 			$(ev.target).val(ev.target.value.replace(/.{1}$/g,  "$&\n")).change();
-			setTextSelected(ev.target, start, end);
+			if(automaticSelectOnPaste){
+        setTextSelected(ev.target, start, end);
+			} else {
+				if (!automaticSelectOnPaste) {
+					var l = ev.target.value.length;
+					setTextSelected(ev.target, l, l);
+				}
+			}
 		}, 200)
 	})
 
