@@ -389,6 +389,10 @@ h1 {
 	border-top: 1px dashed #bbb;
 }
 
+#checkbox br {
+
+}
+
 @media only screen and (max-width: 1280px) {
 	.toolbararea {
 		min-width: 300px;
@@ -408,7 +412,7 @@ h1 {
 		max-width: 400px;
 	}
 	#originalText {
-		width: 263px;
+		width: 249px;
 	}
 	#intendedText {
 		width: 305px;

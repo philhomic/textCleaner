@@ -168,7 +168,6 @@ function retrieveDataFromLocalStorage(key){
   if(val !== null){
     return val;
   } else {
-    console.log(1);
     return false;
   }
 }
@@ -181,3 +180,11 @@ useUserPlanOnPaste = retrieveDataFromLocalStorage('useUserPlanOnPaste') || useUs
 automaticSelectOnPaste = retrieveDataFromLocalStorage('automaticSelectOnPaste') || automaticSelectOnPaste;
 textareaHistory = retrieveDataFromLocalStorage('textareaHistory') || textareaHistory;
 
+window.addEventListener('beforeunload', function(){
+  storage.set('rules', rules);
+  storage.set('groups', groups);
+  storage.set('userPlan', userPlan);
+  storage.set('useUserPlanOnPaste', useUserPlanOnPaste);
+  storage.set('automaticSelectOnPaste', automaticSelectOnPaste);
+  storage.set('textareaHistory', textareaHistory);
+})
