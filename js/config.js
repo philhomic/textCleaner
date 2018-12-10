@@ -119,3 +119,65 @@ var automaticSelectOnPaste = true;
 //用于记录textarea文本修改的记录
 var textareaHistory = [''];
 
+//解决localStorage储存function的问题
+//https://stackoverflow.com/questions/11063630/save-a-function-in-localstorage?rq=1
+JSON.stringify2 = JSON.stringify;
+JSON.parse2 = JSON.parse;
+
+JSON.stringify = function(value) {
+  return JSON.stringify2(value, function(key, val) {
+    return (typeof val === 'function') ? val.toString().replace(/\t|\n/g, '') : val;
+  });
+}
+
+JSON.parse = function(value) {
+  return JSON.parse2(value, function(key, val) {
+    if (typeof val === 'string') {
+      var regex = /^function\s*\([^()]*\)\s*{.*}$/;
+
+      if (regex.exec(val) !== null)
+        return eval('key = ' + val);
+      else
+        return val;
+    } else
+      return val;
+  });
+}
+
+var storage = {};
+
+storage.set = function(key, value) {
+  if (typeof value === 'object')
+    value = JSON.stringify(value);
+
+  localStorage.setItem(key, value);
+}
+
+storage.get = function(key) {
+  var value = localStorage.getItem(key);
+
+  try {
+    return JSON.parse(value);
+  } catch (e) {
+    return value;
+  }
+}
+
+function retrieveDataFromLocalStorage(key){
+  var val = storage.get(key);
+  if(val !== null){
+    return val;
+  } else {
+    console.log(1);
+    return false;
+  }
+}
+
+//设置初始值，如果localStorage中有值就用localStorage中的，否则就是默认的
+rules = retrieveDataFromLocalStorage('rules') || rules;
+groups = retrieveDataFromLocalStorage('groups') || groups;
+userPlan = retrieveDataFromLocalStorage('userPlan') || userPlan;
+useUserPlanOnPaste = retrieveDataFromLocalStorage('useUserPlanOnPaste') || useUserPlanOnPaste;
+automaticSelectOnPaste = retrieveDataFromLocalStorage('automaticSelectOnPaste') || automaticSelectOnPaste;
+textareaHistory = retrieveDataFromLocalStorage('textareaHistory') || textareaHistory;
+

@@ -6,6 +6,7 @@
 		<style>
 		</style>
 		<script src="./js/jquery-3.3.1.min.js"></script>
+		<script src="./js/localforage.min.js"></script>
 		<script src="./js/config.js"></script>
 		<script src="./js/main.js"></script>
 		<link rel="stylesheet" type="text/css" href="style/normalize.css">
@@ -46,14 +47,14 @@
 						<h3>替换操作</h3>
 						<div id="replacer">
 							<div class="specialCharacters" id="regexCharacters">
-								<span class="fullstop" data-chr="\." title="半角句点">.</span><span class="dollar" data-chr="\$" title="半角美元符号">$</span><span class="caret" data-chr="\^" title="半角插入号">^</span><span class="leftBigBracket" data-chr="\{" title="半角左大括号">{</span><span class="rightBigBracket" data-chr="\}" title="半角右大括号">}</span><span class="leftSquareBracket" data-chr="\[" title="半角左中括号">[</span><span class="rightSquareBracket" data-chr="\]" title="半角右中括号">]</span><span class="leftBracket" data-chr="\(" title="半角左圆括号">(</span><span class="rightBracket" data-chr="\)" title="半角右圆括号">)</span><span class="backSlash" data-chr="\\" title="半角反斜线">\</span><span class="verticalLine" data-chr="\|" title="半角竖线">|</span><span class="questionMark" data-chr="\?" title="半角问号">?</span><span class="addMark" data-chr="\+" title="半角加号">+</span><span class="asterisk" data-chr="\*" title="半角星号">*</span><span class="anyCharacters" data-chr=".+" title="一个或多个任意字符，包含空白符号、数字、字母以及各种标点符号">任意字符</span><span class="anyLetters" data-chr="[a-zA-Z]+" title="一个或多个英文字母">任意字母</span><span class="anyNumbers" data-chr="\d+" title="一个或多个数字">任意数字</span><span class="anyWhiteSpaces" data-chr="\s+" title="一个或多个空白符号，比如多个空格或Tab符号等">任意空白</span><span class="newLine" data-chr="\n" title="换行符，需要将位置选择为“文中”才会匹配到">换行符</span>
+								<span class="fullstop" data-chr="\." title="半角句点">.</span><span class="dollar" data-chr="\$" title="半角美元符号">$</span><span class="caret" data-chr="\^" title="半角插入号">^</span><span class="leftBigBracket" data-chr="\{" title="半角左大括号">{</span><span class="rightBigBracket" data-chr="\}" title="半角右大括号">}</span><span class="leftSquareBracket" data-chr="\[" title="半角左中括号">[</span><span class="rightSquareBracket" data-chr="\]" title="半角右中括号">]</span><span class="leftBracket" data-chr="\(" title="半角左圆括号">(</span><span class="rightBracket" data-chr="\)" title="半角右圆括号">)</span><span class="backSlash" data-chr="\\" title="半角反斜线">\</span><span class="verticalLine" data-chr="\|" title="半角竖线">|</span><span class="questionMark" data-chr="\?" title="半角问号">?</span><span class="addMark" data-chr="\+" title="半角加号">+</span><span class="asterisk" data-chr="\*" title="半角星号">*</span><span class="anyCharacters" data-chr=".+" title="一个或多个任意字符，包含空白符号、数字、字母以及各种标点符号">任意字符</span><span class="anyLetters" data-chr="[a-zA-Z]+" title="一个或多个英文字母">任意字母</span><span class="anyNumbers" data-chr="\d+" title="一个或多个数字">任意数字</span><span class="anyWhiteSpaces" data-chr="[^\S\n]+" title="一个或多个空白符号，比如多个空格或Tab符号等">任意空白</span><span class="newLine" data-chr="\n" title="换行符，需要将位置选择为“文中”才会匹配到">换行符</span>
 							</div>
 							将
 							<select id='paraPosition'>
 								<option value="inLine" class="inLine">段中</option>
-								<option id='inPara' value='inPara'>文中</option>
 								<option id='beforePara' value='beforePara'>段首</option>
 								<option id='afterPara' value='afterPara'>段尾</option>
+								<option id='inPara' value='inPara'>全文中</option>
 							</select>
 							的<input id='originalText' type="text">替换为<input type="text" id='intendedText'>
 							<div class="specialCharacters" id="replacerCharacters">
