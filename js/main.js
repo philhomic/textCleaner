@@ -1,3 +1,32 @@
+var resizeTextArea = function(){
+	var textarea = document.getElementsByClassName('textarea')[0];
+	var w = textarea.clientWidth;
+	var h = textarea.clientHeight;
+	var editor = document.getElementById('editor');
+	editor.style.width = w - 100 + 'px';
+	editor.style.height = h - 140 + 'px';
+}
+window.addEventListener('resize', function(){
+	resizeTextArea();
+	window.location.reload();
+})
+
+//设置样式
+// var resetEditorWidth = function(){
+// $('#editor').width($('.textarea').width() - 100 + 'px');
+// }
+//
+// var resetEditorHeight = function(){
+// $('#editor').height($('.textarea').height() - 140 + 'px');
+// }
+//
+// resetEditorHeight();
+// resetEditorWidth();
+//
+// window.addEventListener('resize', function(){
+// resetEditorHeight();
+// resetEditorWidth();
+// })
 
 $(function() {
 	// var rules = {}; //所有的正则替换规则，已经从config中加载过了
@@ -13,6 +42,9 @@ $(function() {
 	//utils
 	//设置文本选中高亮
 	var trackInputTimer = null; //用于input的自动保存
+
+	resizeTextArea();
+
 	var setTextSelected = function(inputDom, startIndex, endIndex) {
 		if (inputDom.setSelectionRange) {
 			inputDom.setSelectionRange(startIndex, endIndex);
@@ -83,23 +115,21 @@ $(function() {
 	  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 	}
 
-    //设置样式
-	var resetEditorWidth = function(){
-		$('#editor').width($('.textarea').width() - 100 + 'px');
-	}
-
-	var resetEditorHeight = function(){
-		$('#editor').height($('.textarea').height() - 140 + 'px');
-	}
-
-	resetEditorHeight();
-	resetEditorWidth();
-
-	window.addEventListener('resize', function(){
-    resetEditorHeight();
-    resetEditorWidth();
-	})
-	// $(window).on('resize', function(){
+  //   //设置样式
+	// var resetEditorWidth = function(){
+	// 	$('#editor').width($('.textarea').width() - 100 + 'px');
+	// }
+	//
+	// var resetEditorHeight = function(){
+	// 	$('#editor').height($('.textarea').height() - 140 + 'px');
+	// }
+	//
+	// resetEditorHeight();
+	// resetEditorWidth();
+	//
+	// window.addEventListener('resize', function(){
+  //   resetEditorHeight();
+  //   resetEditorWidth();
 	// })
 
   //生成【替换操作】以上部分的分组按钮
@@ -317,7 +347,7 @@ $(function() {
 			ruTemp['name'] = text;
 			rules[randomId] = ruTemp;
 			renderGroupButtons(rules);
-		})	
+		})
 	})
 
 	//替换操作区域的规则生成
@@ -372,7 +402,7 @@ $(function() {
 			ruTemp['name'] = text;
 			rules[randomId] = ruTemp;
 			renderGroupButtons(rules);
-		})	
+		})
 	})
 
 	//点击【+用户策略】时的动作
@@ -384,7 +414,7 @@ $(function() {
 			ruTemp['name'] = text;
 			userPlan.push(ruTemp);
 			renderUserPlan();
-		})	
+		})
 	})
 
 	//为替换操作中上面一栏特殊字符按钮添加事件
@@ -486,7 +516,7 @@ $(function() {
 					$('#editor').val(textareaHistory[length-1]['value']);
 					renderHistory();
 				}
-				
+
 			})
 		})
 	};
@@ -582,7 +612,7 @@ $(function() {
 			ruTemp['name'] = text;
 			rules[randomId] = ruTemp;
 			renderGroupButtons(rules);
-		})	
+		})
 	})
 
 	//点击Hack区域中的【+用户策略】时的动作
@@ -594,7 +624,7 @@ $(function() {
 			ruTemp['name'] = text;
 			userPlan.push(ruTemp);
 			renderUserPlan();
-		})			
+		})
 	})
 
 	//点击RESET cleaner之后的动作
