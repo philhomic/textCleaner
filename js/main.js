@@ -484,15 +484,18 @@ $(function() {
 	var trackHistory = function(val, executionName){
 		var trackTotalCount = 50;
 		var len = textareaHistory.length;
+		if (len == 0){
+			textareaHistory = [{'executionName': '内容为空', 'value': ''}];
+		}
 		if (val && executionName) { //增加History记录的时候
-      if(textareaHistory[len-1]['value'] == val) {
-        return false;
-      } else {
-        if (len >= trackTotalCount) {
-          textareaHistory.shift();
-        }
-        textareaHistory.push({'executionName': executionName, 'value': val});
-      }
+	      if(textareaHistory[len-1]['value'] == val) {
+	        return false;
+	      } else {
+	        if (len >= trackTotalCount) {
+	          textareaHistory.shift();
+	        }
+	        textareaHistory.push({'executionName': executionName, 'value': val});
+	      }
 		} else { //撤销操作的时候
 		}
 		renderHistory(); //重新渲染一遍History
@@ -516,7 +519,8 @@ $(function() {
 				textareaHistory.push({'executionName': '内容为空', 'value': ''});
 			}
 			textareaHistory.pop(); //把最后一次的值挤出来
-			latestHistory = textareaHistory.pop() || {'executionName': '内容为空', 'value': ''};
+			var length = textareaHistory.length;
+			latestHistory = textareaHistory[length-1] || {'executionName': '内容为空', 'value': ''};
 			$('#editor').val(latestHistory['value']).change();
 			trackHistory();
 		}

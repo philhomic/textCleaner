@@ -120,7 +120,7 @@ var automaticSelectOnPaste = true;
 var textareaHistory = [{'executionName': '内容为空', 'value': ''}];
 
 //用于记录自动保存的间隔时间
-var autoSaveInterval = 60; //默认以秒计算
+var autoSaveInterval = 10; //默认以秒计算
 
 //解决localStorage储存function的问题
 //https://stackoverflow.com/questions/11063630/save-a-function-in-localstorage?rq=1
