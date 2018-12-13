@@ -309,11 +309,15 @@ $(function() {
 			'f': $.extend(true, [], userPlan),
 			'group': 'userDefined',
 			'title': ''
-		}
-		ruTemp['name'] = window.prompt('请给这个功能起个名字。') || '自定义打包策略';
+		};
 		var randomId = ('' + Math.random()).replace('.', '');
-		rules[randomId] = ruTemp;
-		renderGroupButtons(rules);
+		layer.prompt({title: '请给这个酷酷的功能起个名字', formType: 2}, function(text, index){
+			layer.close(index);
+			layer.msg('搞定！名字是：' + text);
+			ruTemp['name'] = text;
+			rules[randomId] = ruTemp;
+			renderGroupButtons(rules);
+		})	
 	})
 
 	//替换操作区域的规则生成
@@ -361,18 +365,26 @@ $(function() {
 	//点击【+自定义按钮】时的动作
 	$('#addToUserButtonFromReplace').on('click', function(){
 		var ruTemp = generateRuleFromReplace();
-		ruTemp['name'] = window.prompt('请给这个功能起个名字。') || '自定义替换';
-		var randomId = ('' + Math.random()).replace('.', '');
-		rules[randomId] = ruTemp;
-		renderGroupButtons(rules);
+		layer.prompt({title: '请给这个酷酷的功能起个名字', formType: 2}, function(text, index){
+			layer.close(index);
+			layer.msg('搞定！名字是：' + text);
+			var randomId = ('' + Math.random()).replace('.', '');
+			ruTemp['name'] = text;
+			rules[randomId] = ruTemp;
+			renderGroupButtons(rules);
+		})	
 	})
 
 	//点击【+用户策略】时的动作
 	$('#addToUserPlanFromReplace').on('click', function(){
 		var ruTemp = generateRuleFromReplace();
-		ruTemp['name'] = window.prompt('请给这个功能起个名字。') || '自定义策略';
-		userPlan.push(ruTemp);
-		renderUserPlan();
+		layer.prompt({title: '请给这个酷酷的功能起个名字', formType: 2}, function(text, index){
+			layer.close(index);
+			layer.msg('搞定！名字是：' + text);
+			ruTemp['name'] = text;
+			userPlan.push(ruTemp);
+			renderUserPlan();
+		})	
 	})
 
 	//为替换操作中上面一栏特殊字符按钮添加事件
@@ -448,7 +460,8 @@ $(function() {
 			return;
 		} else {
 			trackInputTimer = setTimeout(function(){
-				trackHistory(ev.target.value, '自动保存');
+				var editor = $('#editor').get(0)
+				trackHistory(editor.value, '自动保存');
 				trackInputTimer = null;
 			}, 1000 * autoSaveInterval);
 		}
@@ -536,7 +549,7 @@ $(function() {
 	})
 
 	// HACK操作区的规则生成
-	var generateRuleFromHack = function(needName){
+	var generateRuleFromHack = function(){
 		var editor = $('#editor').get(0);
 		var $regex = $('#regex');
 		var $flag = $('#flag');
@@ -548,33 +561,40 @@ $(function() {
 			'f': new Function('a', 'b', 'c', 'd', 'e', 'f', 'g', $function.val()),
 			'group': 'userDefined'
 		}
-		if(needName && ruTemp['name'] == ''){
-			ruTemp['name'] = window.prompt('请给这个功能起个名字。') || '自定义hack';
-		}
 		return ruTemp;
 	}
 
 	//开始 Hack 按钮的动作
 	$('#executeHack').on('click', function(){
 		var editor = $('#editor').get(0);
-		var ruTemp = generateRuleFromHack(false);
+		var ruTemp = generateRuleFromHack();
 		replaceSelectedText(editor, ruTemp);
 		trackHistory(editor.value, '执行Hack操作');
 	})
 
 	//点击Hack区域中的【+自定义按钮】时的动作
 	$('#addToUserButtonFromHack').on('click', function(){
-		var ruTemp = generateRuleFromHack(true);
-		var randomId = ('' + Math.random()).replace('.', '');
-		rules[randomId] = ruTemp;
-		renderGroupButtons(rules);
+		var ruTemp = generateRuleFromHack();
+		layer.prompt({title: '请给这个酷酷的功能起个名字', formType: 2}, function(text, index){
+			layer.close(index);
+			layer.msg('搞定！名字是：' + text);
+			var randomId = ('' + Math.random()).replace('.', '');
+			ruTemp['name'] = text;
+			rules[randomId] = ruTemp;
+			renderGroupButtons(rules);
+		})	
 	})
 
 	//点击Hack区域中的【+用户策略】时的动作
 	$('#addToUserPlanFromHack').on('click', function(){
-		var ruTemp = generateRuleFromHack(true);
-		userPlan.push(ruTemp);
-		renderUserPlan();
+		var ruTemp = generateRuleFromHack();
+		layer.prompt({title: '请给这个酷酷的功能起个名字', formType: 2}, function(text, index){
+			layer.close(index);
+			layer.msg('搞定！名字是：' + text);
+			ruTemp['name'] = text;
+			userPlan.push(ruTemp);
+			renderUserPlan();
+		})			
 	})
 
 	//点击RESET cleaner之后的动作

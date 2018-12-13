@@ -176,20 +176,20 @@ function retrieveDataFromLocalStorage(key){
 }
 
 //设置初始值，如果localStorage中有值就用localStorage中的，否则就是默认的
-// rules = retrieveDataFromLocalStorage('rules') || rules;
-// groups = retrieveDataFromLocalStorage('groups') || groups;
-// userPlan = retrieveDataFromLocalStorage('userPlan') || userPlan;
-// useUserPlanOnPaste = retrieveDataFromLocalStorage('useUserPlanOnPaste') || useUserPlanOnPaste;
-// automaticSelectOnPaste = retrieveDataFromLocalStorage('automaticSelectOnPaste') || automaticSelectOnPaste;
-// textareaHistory = retrieveDataFromLocalStorage('textareaHistory') || textareaHistory;
-// autoSaveInterval = retrieveDataFromLocalStorage('autoSaveInterval') || autoSaveInterval;
-//
-// window.addEventListener('beforeunload', function(){
-//   storage.set('rules', rules);
-//   storage.set('groups', groups);
-//   storage.set('userPlan', userPlan);
-//   storage.set('useUserPlanOnPaste', useUserPlanOnPaste);
-//   storage.set('automaticSelectOnPaste', automaticSelectOnPaste);
-//   storage.set('textareaHistory', textareaHistory);
-//   storage.set('autoSaveInterval', autoSaveInterval);
-// })
+rules = retrieveDataFromLocalStorage('rules') || rules;
+groups = retrieveDataFromLocalStorage('groups') || groups;
+userPlan = retrieveDataFromLocalStorage('userPlan') || userPlan;
+useUserPlanOnPaste = retrieveDataFromLocalStorage('useUserPlanOnPaste') || useUserPlanOnPaste;
+automaticSelectOnPaste = retrieveDataFromLocalStorage('automaticSelectOnPaste') || automaticSelectOnPaste;
+textareaHistory = retrieveDataFromLocalStorage('textareaHistory') || textareaHistory;
+autoSaveInterval = retrieveDataFromLocalStorage('autoSaveInterval') || autoSaveInterval;
+
+window.addEventListener('beforeunload', function(){
+  storage.set('rules', rules);
+  storage.set('groups', groups);
+  storage.set('userPlan', userPlan);
+  storage.set('useUserPlanOnPaste', useUserPlanOnPaste);
+  storage.set('automaticSelectOnPaste', automaticSelectOnPaste);
+  storage.set('textareaHistory', textareaHistory);
+  storage.set('autoSaveInterval', autoSaveInterval);
+})
