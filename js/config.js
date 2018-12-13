@@ -33,7 +33,7 @@ var ruAddEmptyLineBetweenLines = {
 
 var ruDeleteEmptyLinesBetweenLines = {
   'name': '去掉段间空行',
-  're': '\\n+',
+  're': '\\n\\s*\\n',
   'flag': 'g',
   'f': '\n',
   'group': 'lines',
@@ -71,13 +71,13 @@ var ruDeleteEmptySpacesBetweenAndAfterParagraphs = {
 
 var ruDeleteNumAfterLetters = {
   'name': '删除字母结尾后的数字',
-  're': '([a-zA-Z]+)\\d+\\b',
+  're': '([^\\s\\d]+)\\d+\\b',
   'flag': 'mg',
   'f': function(wordEndingWithNumber, word){
     return word;
   },
   'group': 'deletes',
-  'title': '删除一个或多个字母后面紧跟的数字，例如Hello4中的4就会被删去。'
+  'title': '删除一个或多个字母后面紧跟的数字，例如Hello4中的4就会被删去。但是如果数字后面没有空白字符的话，是不会被删掉的，例如Hello4Hello中的4就不会被删除。'
 }
 
 var ruCombineSpacesWithinLinesToOneBlank = {
@@ -117,7 +117,10 @@ var useUserPlanOnPaste = false;
 var automaticSelectOnPaste = true;
 
 //用于记录textarea文本修改的记录
-var textareaHistory = [''];
+var textareaHistory = [{'executionName': '内容为空', 'value': ''}];
+
+//用于记录自动保存的间隔时间
+var autoSaveInterval = 60; //默认以秒计算
 
 //解决localStorage储存function的问题
 //https://stackoverflow.com/questions/11063630/save-a-function-in-localstorage?rq=1
@@ -133,7 +136,7 @@ JSON.stringify = function(value) {
 JSON.parse = function(value) {
   return JSON.parse2(value, function(key, val) {
     if (typeof val === 'string') {
-      var regex = /^function\s*\([^()]*\)\s*{.*}$/;
+      var regex = /^function\s*\([^()]*\)\s*\{.*}$/;
 
       if (regex.exec(val) !== null)
         return eval('key = ' + val);
@@ -173,18 +176,20 @@ function retrieveDataFromLocalStorage(key){
 }
 
 //设置初始值，如果localStorage中有值就用localStorage中的，否则就是默认的
-rules = retrieveDataFromLocalStorage('rules') || rules;
-groups = retrieveDataFromLocalStorage('groups') || groups;
-userPlan = retrieveDataFromLocalStorage('userPlan') || userPlan;
-useUserPlanOnPaste = retrieveDataFromLocalStorage('useUserPlanOnPaste') || useUserPlanOnPaste;
-automaticSelectOnPaste = retrieveDataFromLocalStorage('automaticSelectOnPaste') || automaticSelectOnPaste;
-textareaHistory = retrieveDataFromLocalStorage('textareaHistory') || textareaHistory;
-
-window.addEventListener('beforeunload', function(){
-  storage.set('rules', rules);
-  storage.set('groups', groups);
-  storage.set('userPlan', userPlan);
-  storage.set('useUserPlanOnPaste', useUserPlanOnPaste);
-  storage.set('automaticSelectOnPaste', automaticSelectOnPaste);
-  storage.set('textareaHistory', textareaHistory);
-})
+// rules = retrieveDataFromLocalStorage('rules') || rules;
+// groups = retrieveDataFromLocalStorage('groups') || groups;
+// userPlan = retrieveDataFromLocalStorage('userPlan') || userPlan;
+// useUserPlanOnPaste = retrieveDataFromLocalStorage('useUserPlanOnPaste') || useUserPlanOnPaste;
+// automaticSelectOnPaste = retrieveDataFromLocalStorage('automaticSelectOnPaste') || automaticSelectOnPaste;
+// textareaHistory = retrieveDataFromLocalStorage('textareaHistory') || textareaHistory;
+// autoSaveInterval = retrieveDataFromLocalStorage('autoSaveInterval') || autoSaveInterval;
+//
+// window.addEventListener('beforeunload', function(){
+//   storage.set('rules', rules);
+//   storage.set('groups', groups);
+//   storage.set('userPlan', userPlan);
+//   storage.set('useUserPlanOnPaste', useUserPlanOnPaste);
+//   storage.set('automaticSelectOnPaste', automaticSelectOnPaste);
+//   storage.set('textareaHistory', textareaHistory);
+//   storage.set('autoSaveInterval', autoSaveInterval);
+// })

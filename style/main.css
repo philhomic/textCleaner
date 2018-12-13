@@ -105,6 +105,7 @@ body {
 
 header {
 	flex: 0;
+	position: relative;
 }
 
 h1 {
@@ -113,6 +114,23 @@ h1 {
 	color: #fff;
 	font-family: Impact, Charcoal, sans-serif;
 	background: rgba(255, 255, 255, 0.25);
+}
+
+#reset {
+	position: absolute;
+	top: 15px;
+	right: 40px;
+	display: block;
+	padding: 10px;
+	border-width: 1px;
+	border-color: #fff;
+	border-style: dashed solid;
+	border-radius: 6px;
+	outline: none;
+	cursor: pointer;
+	background: #fff;
+	color: #fc2c3f;
+	font-weight: 800;
 }
 
 .main {
@@ -134,6 +152,67 @@ h1 {
 	overflow: auto;
 }
 
+.trackHistoryArea {
+	box-sizing: border-box;
+	overflow: auto;
+	border-left: 1px solid #aaa;
+}
+
+/* scrollbar style */
+.toolbararea::-webkit-scrollbar-track, #editor::-webkit-scrollbar-track,
+.trackHistoryArea::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+.toolbararea::-webkit-scrollbar, #editor::-webkit-scrollbar, .trackHistoryArea::-webkit-scrollbar {
+	width: 6px;
+	background-color: #F5F5F5;
+}
+.toolbararea::-webkit-scrollbar-thumb, #editor::-webkit-scrollbar-thumb,
+.trackHistoryArea::-webkit-scrollbar-thumb {
+	background-color: #27ae60;
+}
+
+.trackHistoryArea #trackHistory {
+	position: relative;
+	margin: 40px 0 40px 0;
+}
+
+#trackHistory .historyItem {
+	background: rgba(255, 255, 255, 0.8);
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 15px;
+	position: relative;
+	padding: 6px;
+	color: #555;
+	font-size: 15px;
+	font-family: 'Microsoft Yahei';
+}
+
+#trackHistory .historyItem:before,  #trackHistory .historyItem:after {
+	display: block;
+	content: '';
+	background: inherit;
+	width: 10px;
+	position: absolute;
+	top: 0;
+	height: 2px;
+}
+
+#trackHistory .historyItem:before {
+	left: -10px;
+}
+#trackHistory .historyItem:after {
+	right: -10px;
+}
+
+#trackHistory .historyItem:hover {
+	background: #27ae60;
+	color: #fff;
+	cursor: pointer;
+}
+
 #editor {
 	flex: 1;
 	font-size: 22px;
@@ -153,8 +232,10 @@ h1 {
 #toolbars {
 	display: flex;
 	flex-direction: column;
-	margin: 40px 0 40px 20px;
+	margin: 40px 0 40px 0;
 }
+
+
 
 #toolbars div {
 	display: flex;
@@ -167,7 +248,7 @@ h1 {
 	margin-top: 0;
 }
 
-#toolbars div h3 {
+#toolbars div h3, #trackHistory h3 {
 	display: block;
 	width: 100%;
 	text-align: center;
@@ -175,7 +256,7 @@ h1 {
 	border-top: 1px dashed #fff;
 	border-bottom: 1px dashed #fff;
 	color: #fff;
-	margin: 4px;
+	/*margin: 4px;*/
 	font-family: 'Microsoft Yahei';
 	font-weight: 700;
 	background: rgba(255, 255, 255, 0.2);
@@ -389,14 +470,15 @@ h1 {
 	border-top: 1px dashed #bbb;
 }
 
-#checkbox br {
-
-}
 
 @media only screen and (max-width: 1280px) {
 	.toolbararea {
 		min-width: 300px;
 		max-width: 300px;
+	}
+	.trackHistoryArea {
+		min-width: 100px;
+		max-width: 100px;
 	}
 	#originalText {
 		width: 163px;
@@ -411,6 +493,10 @@ h1 {
 		min-width: 400px;
 		max-width: 400px;
 	}
+	.trackHistoryArea {
+		 min-width: 150px;
+		 max-width: 150px;
+	 }
 	#originalText {
 		width: 249px;
 	}

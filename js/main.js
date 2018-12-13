@@ -12,6 +12,7 @@ $(function() {
 
 	//utils
 	//设置文本选中高亮
+	var trackInputTimer = null; //用于input的自动保存
 	var setTextSelected = function(inputDom, startIndex, endIndex) {
 		if (inputDom.setSelectionRange) {
 			inputDom.setSelectionRange(startIndex, endIndex);
@@ -84,7 +85,7 @@ $(function() {
 
     //设置样式
 	var resetEditorWidth = function(){
-		$('#editor').width($('.textarea').width() - 120 + 'px');
+		$('#editor').width($('.textarea').width() - 100 + 'px');
 	}
 
 	var resetEditorHeight = function(){
@@ -93,10 +94,13 @@ $(function() {
 
 	resetEditorHeight();
 	resetEditorWidth();
-	$(window).on('resize', function(){
-		resetEditorHeight();
-		resetEditorWidth();
+
+	window.addEventListener('resize', function(){
+    resetEditorHeight();
+    resetEditorWidth();
 	})
+	// $(window).on('resize', function(){
+	// })
 
   //生成【替换操作】以上部分的分组按钮
 	var renderGroupButtons = function(rules){
@@ -155,6 +159,7 @@ $(function() {
 			if (rules[ruleName]){
 	      $('#' + id).on('click', function(){
 	        replaceSelectedText(editor, rules[ruleName]);
+	        trackHistory(editor.value, btn.innerText);
 	      })
 			}
 		})
@@ -286,6 +291,7 @@ $(function() {
 		if (userPlan.length == 0) return; //用户策略里面没东西，直接返回
 		var editor = $('#editor').get(0);
 		replaceSelectedText(editor, userPlan);
+		trackHistory(editor.value, '执行用户策略');
 	})
 
 	//点击【清空用户策略】时候的操作
@@ -349,6 +355,7 @@ $(function() {
 	$('#executeReplace').on('click', function(){
 		var ruTemp = generateRuleFromReplace();
 		replaceSelectedText(editor, ruTemp);
+		trackHistory(editor.value, '执行替换操作');
 	})
 
 	//点击【+自定义按钮】时的动作
@@ -374,17 +381,26 @@ $(function() {
 		var originalText = $originalText.get(0);
 		var chr = ev.target.dataset.chr;
 		var posStart = originalText.selectionStart;
+		var posEnd = originalText.selectionEnd;
 		var prevStr = $originalText.val();
-		var newStr = prevStr.substring(0, posStart) + chr + prevStr.substring(posStart);
-		$originalText.val(newStr).focus().trigger('input');
-		originalText.selectionStart = posStart + chr.length;
-		originalText.selectionEnd = posStart + chr.length;
+		var chrLength = chr.length;
+		var newStr = prevStr.substring(0, posStart) + chr + prevStr.substring(posEnd);
+		$originalText.val(newStr).focus();
+		originalText.selectionStart = originalText.selectionEnd = posStart + chrLength;
 	})
 
 	//为替换操作中下面一栏的特殊字符按钮添加事件
 	$('#replacerCharacters').on('click', function(ev){
-		var prevStr = $('#intendedText').val();
-		$('#intendedText').val(prevStr + ev.target.dataset.chr).focus().trigger('input');
+    var $intendedText = $('#intendedText');
+    var intendedText = $intendedText.get(0);
+    var chr = ev.target.dataset.chr;
+    var posStart = intendedText.selectionStart;
+    var posEnd = intendedText.selectionEnd;
+    var prevStr = $intendedText.val();
+    var chrLength = chr.length;
+    var newStr = prevStr.substring(0, posStart) + chr + prevStr.substring(posEnd);
+    $intendedText.val(newStr).focus();
+    intendedText.selectionStart = intendedText.selectionEnd = posStart + chrLength;
 	})
 
 	//为toolbar中的input添加onchange事件，如果不为空，则背景颜色变色以提示用户
@@ -405,14 +421,16 @@ $(function() {
 		var end;
 		//var length = ev.originalEvent.clipboardData.getData('Text').length;
 		setTimeout(function(){
+			trackHistory(ev.target.value, '执行粘贴');
 			end = $('#editor').prop('selectionEnd');
 			setTextSelected(ev.target, start, end);
 			if(useUserPlanOnPaste){ //是否在粘贴时就采用用户策略
 				replaceSelectedText(ev.target, userPlan);
+        trackHistory(ev.target.value, '执行用户策略');
 			}
 			start = ev.target.selectionStart;
 			end = ev.target.selectionEnd;
-			$(ev.target).val(ev.target.value.replace(/.{1}$/g,  "$&\n")).change();
+			$(ev.target).val(ev.target.value.replace(/.{1}$/g,  "$&\n"));
 			if(automaticSelectOnPaste){
         setTextSelected(ev.target, start, end);
 			} else {
@@ -424,26 +442,67 @@ $(function() {
 		}, 200)
 	})
 
-	//用来记录$editor的历史记录
-	$('#editor').bind('paste change input', function(ev){
-		var trackNum = 50;
-		var len = textareaHistory.length;
-		var value = ev.target.value;
-		if (value != textareaHistory[len-1]){
-			if(len >= trackNum) {
-				textareaHistory.shift();
-			}
-			textareaHistory.push(value);
-		} else {
+	//追踪editor的input事件
+	$('#editor').on('input', function(ev){
+		if (trackInputTimer) {
 			return;
+		} else {
+			trackInputTimer = setTimeout(function(){
+				trackHistory(ev.target.value, '自动保存');
+				trackInputTimer = null;
+			}, 1000 * autoSaveInterval);
 		}
 	})
+
+	var renderHistory = function(){
+		var $trackHistory = $('#trackHistory');
+		$trackHistory.empty();
+		$trackHistory.append($('<h3>历史跟踪</h3>'));
+		var reverseHistory = $.extend(true, [], textareaHistory).reverse();
+		reverseHistory.forEach(function(historyItem, idx){
+			var $itemElement = $('<div class="historyItem">' + historyItem['executionName'] + '</div>')
+			$trackHistory.append($itemElement);
+			$itemElement.on('click', function(ev){
+				var index = $(ev.target).index();
+				var length;
+				if (index == 1) {
+					return;
+				} else {
+					textareaHistory.splice(1-index);
+					length = textareaHistory.length;
+					$('#editor').val(textareaHistory[length-1]['value']);
+					renderHistory();
+				}
+				
+			})
+		})
+	};
+
+	renderHistory();
+
+	//历史记录操作
+	var trackHistory = function(val, executionName){
+		var trackTotalCount = 50;
+		var len = textareaHistory.length;
+		if (val && executionName) { //增加History记录的时候
+      if(textareaHistory[len-1]['value'] == val) {
+        return false;
+      } else {
+        if (len >= trackTotalCount) {
+          textareaHistory.shift();
+        }
+        textareaHistory.push({'executionName': executionName, 'value': val});
+      }
+		} else { //撤销操作的时候
+		}
+		renderHistory(); //重新渲染一遍History
+	}
 
 	var initEditor = function(){
 		var len = textareaHistory.length;
 		var initText = '';
 		if (len >= 1) {
-			initText = textareaHistory[len-1];
+			initText = textareaHistory[len-1]['value'];
 		}
 		$('#editor').val(initText);
 	}
@@ -454,13 +513,22 @@ $(function() {
 		var historyStr = '';
 		if(ev.which == 90 && ev.ctrlKey){
 			if (textareaHistory.length == 0){
-				textareaHistory.push('');
+				textareaHistory.push({'executionName': '内容为空', 'value': ''});
 			}
 			textareaHistory.pop(); //把最后一次的值挤出来
-			historyStr = textareaHistory.pop() || '';
-			$('#editor').val(historyStr).change();
+			latestHistory = textareaHistory.pop() || {'executionName': '内容为空', 'value': ''};
+			$('#editor').val(latestHistory['value']).change();
+			trackHistory();
 		}
 		ev.preventDefault();
+		return false;
+	})
+
+	$('body').on('keydown', function(ev){
+    if(ev.which == 90 && ev.ctrlKey){
+      ev.preventDefault();
+      return false;
+    }
 	})
 
 	// HACK操作区的规则生成
@@ -484,8 +552,10 @@ $(function() {
 
 	//开始 Hack 按钮的动作
 	$('#executeHack').on('click', function(){
+		var editor = $('#editor').get(0);
 		var ruTemp = generateRuleFromHack(false);
 		replaceSelectedText(editor, ruTemp);
+		trackHistory(editor.value, '执行Hack操作');
 	})
 
 	//点击Hack区域中的【+自定义按钮】时的动作
@@ -501,6 +571,18 @@ $(function() {
 		var ruTemp = generateRuleFromHack(true);
 		userPlan.push(ruTemp);
 		renderUserPlan();
+	})
+
+	//点击RESET cleaner之后的动作
+	$('#reset').on('click', function(){
+		localStorage.clear();
+		rules = null;
+		groups = null;
+		automaticSelectOnPaste = null;
+		textareaHistory = null;
+		useUserPlanOnPaste = null;
+		userPlan = null;
+		window.location.reload();
 	})
 
 })
