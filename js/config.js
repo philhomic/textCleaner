@@ -185,6 +185,18 @@ automaticSelectOnPaste = retrieveDataFromLocalStorage('automaticSelectOnPaste') 
 textareaHistory = retrieveDataFromLocalStorage('textareaHistory') || textareaHistory;
 autoSaveInterval = retrieveDataFromLocalStorage('autoSaveInterval') || autoSaveInterval;
 
+function checkFunction(f){
+  if (typeof f === 'string'){
+    return eval('key = ' + f);
+  } else {
+    return f;
+  }
+}
+
+for(var rule in rules){
+  rule['f'] = checkFunction(rule['f']);
+}
+
 window.addEventListener('beforeunload', function(){
   storage.set('rules', rules);
   storage.set('groups', groups);
