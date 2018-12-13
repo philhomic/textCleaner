@@ -136,23 +136,24 @@ JSON.stringify = function(value) {
 JSON.parse = function(value) {
   return JSON.parse2(value, function(key, val) {
     if (typeof val === 'string') {
-      var regex = /^function\s*\([^()]*\)\s*\{.*}$/;
-
-      if (regex.exec(val) !== null)
+      var regex = /^function\s*\([^()]*\)\s*\{.*\}\s*$/;
+      if (regex.exec(val) !== null){
         return eval('key = ' + val);
-      else
+      } else {
         return val;
-    } else
+      }
+    } else {
       return val;
+    }
   });
 }
 
 var storage = {};
 
 storage.set = function(key, value) {
-  if (typeof value === 'object')
+  if (typeof value === 'object'){
     value = JSON.stringify(value);
-
+  }
   localStorage.setItem(key, value);
 }
 
