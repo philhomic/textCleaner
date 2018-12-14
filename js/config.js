@@ -124,85 +124,53 @@ var autoSaveInterval = 10; //默认以秒计算
 
 //解决localStorage储存function的问题
 //https://stackoverflow.com/questions/11063630/save-a-function-in-localstorage?rq=1
-JSON.stringify2 = JSON.stringify;
-JSON.parse2 = JSON.parse;
-
-JSON.stringify = function(value) {
-  return JSON.stringify2(value, function(key, val) {
-    return (typeof val === 'function') ? val.toString().replace(/\t|\n/g, '') : val;
-  });
+var stringifyObj = function(obj){
+  return JSON.stringify(obj, function(key, val){
+    if (typeof val === 'function'){
+      return val + '';
+    } else {
+      return val;
+    }
+  })
 }
 
-JSON.parse = function(value) {
-  return JSON.parse2(value, function(key, val) {
-    if (typeof val === 'string') {
-      var regex = /^function\s*\([^()]*\)\s*\{.*\}\s*$/;
-      if (regex.exec(val) !== null){
-        return eval('key = ' + val);
+var parseObj = function(string){
+  return JSON.parse(string, function(key, val){
+    if (typeof val === 'string'){
+      var re = /^function\s*\([^()]*\)\s*\{.*\}\s*$/;
+      if (re.test(val) ){
+        return eval('key' + val);
       } else {
         return val;
       }
     } else {
       return val;
-    }
-  });
+    } 
+  })
 }
 
-var storage = {};
-
-storage.set = function(key, value) {
-  if (typeof value === 'object'){
-    value = JSON.stringify(value);
-  }
-  localStorage.setItem(key, value);
+var initData = function(obj, key){ //如果localStorage中有值，就用那个值
+  var objString = localStorage.getItem(key);
+  if (objString !== null){
+    obj = parseObj(objString);
+  } 
 }
 
-storage.get = function(key) {
-  var value = localStorage.getItem(key);
+initData(rules, 'rules');
+initData(groups, 'groups');
+initData(userPlan, 'userPlan');
+initData(useUserPlanOnPaste, 'useUserPlanOnPaste');
+initData(automaticSelectOnPaste, 'automaticSelectOnPaste');
+initData(textareaHistory, 'textareaHistory');
+initData(autoSaveInterval, 'autoSaveInterval');
 
-  try {
-    return JSON.parse(value);
-  } catch (e) {
-    return value;
-  }
-}
-
-function retrieveDataFromLocalStorage(key){
-  var val = storage.get(key);
-  if(val !== null){
-    return val;
-  } else {
-    return false;
-  }
-}
-
-//设置初始值，如果localStorage中有值就用localStorage中的，否则就是默认的
-rules = retrieveDataFromLocalStorage('rules') || rules;
-groups = retrieveDataFromLocalStorage('groups') || groups;
-userPlan = retrieveDataFromLocalStorage('userPlan') || userPlan;
-useUserPlanOnPaste = retrieveDataFromLocalStorage('useUserPlanOnPaste') || useUserPlanOnPaste;
-automaticSelectOnPaste = retrieveDataFromLocalStorage('automaticSelectOnPaste') || automaticSelectOnPaste;
-textareaHistory = retrieveDataFromLocalStorage('textareaHistory') || textareaHistory;
-autoSaveInterval = retrieveDataFromLocalStorage('autoSaveInterval') || autoSaveInterval;
-
-function checkFunction(f){
-  if (typeof f === 'string'){
-    return eval('key = ' + f);
-  } else {
-    return f;
-  }
-}
-
-for(var rule in rules){
-  rule['f'] = checkFunction(rule['f']);
-}
 
 window.addEventListener('beforeunload', function(){
-  storage.set('rules', rules);
-  storage.set('groups', groups);
-  storage.set('userPlan', userPlan);
-  storage.set('useUserPlanOnPaste', useUserPlanOnPaste);
-  storage.set('automaticSelectOnPaste', automaticSelectOnPaste);
-  storage.set('textareaHistory', textareaHistory);
-  storage.set('autoSaveInterval', autoSaveInterval);
+  localStorage.setItem('rules', stringifyObj(rules));
+  localStorage.setItem('groups', stringifyObj(groups));
+  localStorage.setItem('userPlan', stringifyObj(userPlan));
+  localStorage.setItem('useUserPlanOnPaste', stringifyObj(useUserPlanOnPaste));
+  localStorage.setItem('automaticSelectOnPaste', stringifyObj(automaticSelectOnPaste));
+  localStorage.setItem('textareaHistory', stringifyObj(textareaHistory));
+  localStorage.setItem('autoSaveInterval', stringifyObj(autoSaveInterval));
 })
