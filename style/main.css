@@ -229,6 +229,30 @@ h1 {
 	line-height: 1.5;
 }
 
+#filearea {
+	height: 100px;
+}
+
+#filearea div {
+	display: flex;
+	flex-flow: row nowrap;
+}
+#filearea .explain, #filearea div div {
+	font-size: 14px;
+	background: rgba(208, 201, 41, 0.7);
+	width: 120px;
+	height: 40px;
+	margin: 10px;
+	padding: 5px 5px;
+	color: #fff;
+	border-radius: 5px;
+}
+
+#filearea div div {
+	margin-left: 0;
+	background: #fff;
+}
+
 #toolbars {
 	display: flex;
 	flex-direction: column;
@@ -248,7 +272,7 @@ h1 {
 	margin-top: 0;
 }
 
-#toolbars div h3, #trackHistory h3 {
+#toolbars div h3, #trackHistory h3, #filearea h3 {
 	display: block;
 	width: 100%;
 	text-align: center;

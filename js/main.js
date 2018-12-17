@@ -4,7 +4,7 @@ var resizeTextArea = function(){
 	var h = textarea.clientHeight;
 	var editor = document.getElementById('editor');
 	editor.style.width = w - 100 + 'px';
-	editor.style.height = h - 140 + 'px';
+	editor.style.height = h - 240 + 'px';
 }
 window.addEventListener('resize', function(){
 	resizeTextArea();
