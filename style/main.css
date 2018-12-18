@@ -240,7 +240,8 @@ h1 {
 #filearea .explain, #filearea div div {
 	font-size: 14px;
 	background: rgba(208, 201, 41, 0.7);
-	width: 120px;
+	/* width: 120px; */
+	flex: 1;
 	height: 40px;
 	margin: 10px;
 	padding: 5px 5px;
@@ -248,9 +249,30 @@ h1 {
 	border-radius: 5px;
 }
 
-#filearea div div {
-	margin-left: 0;
+#filearea .filelist {
+	flex: 6;
+	margin-left: 10px;
 	background: #fff;
+	border-radius: 0;
+	color: red;
+	overflow: auto;
+	cursor: grabbing;
+}
+
+#filearea .filelist:empty::before {
+	color: lightgrey;
+	content: attr(placeholder);
+}
+
+#filearea .batchFileExecute {
+	flex: 1;
+	display: flex;
+	margin-left: 0;
+	background: rgb(85, 55, 179);
+	text-align:center;
+	justify-content: center;
+	align-items:center;
+	/* line-height: 20px; */
 }
 
 #toolbars {
@@ -389,7 +411,7 @@ h1 {
 
 #toolbars .hack #executeHack {
 	display: block;
-	background-color: #8d09ff;
+	background-color: rgb(198, 102, 24);
 	width: 100%;
 	padding: 10px;
 	margin-top: 5px

@@ -639,4 +639,9 @@ $(function() {
 		window.location.reload();
 	})
 
+	//批量文件操作相关代码
+	$('#batchFileExe').on('click', function(){
+		
+	})
+
 })
